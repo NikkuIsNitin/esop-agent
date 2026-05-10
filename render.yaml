@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: esop-intelligence-agent
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false        # you'll paste the value in Render dashboard
+      - key: PYTHON_VERSION
+        value: 3.11.0

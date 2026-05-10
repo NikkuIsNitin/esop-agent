@@ -1,0 +1,32 @@
+# Environment
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+
+# Runtime data (generated at runtime, not committed)
+data/
+*.db
+*.sqlite3
+
+# PDF cache files created during extraction
+*.txt
+
+# Temp report files
+/tmp/
+esop_*/
+
+# Excel outputs (generated, not source)
+*.xlsx
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
