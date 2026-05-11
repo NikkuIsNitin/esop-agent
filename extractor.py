@@ -15,7 +15,7 @@ from schema import (
     SCHEME_FIELDS_ORDERED, ESOP_FIELDS, FIELD_LABELS,
     KMP_FIELDS, KMP_FIELD_LABELS,
     HIGHLIGHT_ROWS, SECTION_ROWS,
-    SCHEME_EXTRACTION_PROMPT, KMP_EXTRACTION_PROMPT,
+    SCHEME_EXTRACTION_PROMPT, KMP_EXTRACTION_PROMPT, SPARSE_EXTRACTION_PROMPT,
 )
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
@@ -229,6 +229,39 @@ def extract_scheme_data(company, year, pdf_path, url_info) -> list[dict]:
             schemes3 = _extract_and_call(chunk, "full-doc")
             if _data_richness(schemes3) > _data_richness(schemes):
                 schemes = schemes3
+
+    # ── Attempt 4: prose extraction across multiple document chunks ────────────
+    # For companies with non-standard disclosure (prose paragraphs, scanned-then-OCR'd,
+    # ESOP data buried in Director's Report or notes) — flexible prompt, 3 doc chunks
+    if not schemes or _data_richness(schemes) < 0.05:
+        print(f"  Trying prose/flexible extraction across document chunks...")
+        full_text = get_full_text(pdf_path)
+        if full_text:
+            total = len(full_text)
+            # Scan start, middle, and last-third of document
+            chunks = [
+                full_text[:35000],
+                full_text[max(0, total//2 - 17500): total//2 + 17500],
+                full_text[max(0, total - 35000):],
+            ]
+            best = schemes
+            for i, chunk in enumerate(chunks):
+                if not chunk.strip():
+                    continue
+                try:
+                    prompt = SPARSE_EXTRACTION_PROMPT.format(
+                        company=company, year=year, esop_text=chunk[:35000])
+                    raw = _call_claude_extract(prompt)
+                    s = _parse_json(raw, f"FY{year} prose-chunk{i}")
+                    for item in s:
+                        item["source_pdf_url"] = pdf_url
+                        item = _compute_pct_fields(item)
+                    if _data_richness(s) > _data_richness(best):
+                        best = s
+                except Exception as e:
+                    print(f"  Prose chunk {i} failed: {e}")
+            if _data_richness(best) > _data_richness(schemes):
+                schemes = best
 
     print(f"  FY{year}: {len(schemes)} scheme(s) | richness={_data_richness(schemes):.0%}")
     return schemes

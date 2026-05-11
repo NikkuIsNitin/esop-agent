@@ -191,6 +191,56 @@ Annual Report ESOP Section:
 Return ONLY valid JSON array. No markdown, no explanation."""
 
 
+SPARSE_EXTRACTION_PROMPT = """You are extracting ESOP/stock option data from an Indian company annual report where the data may be in PROSE FORM, not a neat table.
+
+The standard structured table may be missing. Instead look for:
+- Sentences like "X options were granted during the year"
+- "options outstanding as at 31st March" or "options vested/exercised"
+- Any number followed by "options", "stock options", "ESOPs", "RSUs"
+- "pool of X options" or "X% of paid-up capital"
+- Exercise prices mentioned anywhere in text
+- Vesting period descriptions
+- Scheme names or plan names
+
+━━ INSTRUCTIONS ━━
+Extract WHATEVER partial data you can find. Leave fields as null if genuinely not mentioned.
+Do NOT invent numbers. Only extract what is explicitly stated.
+Even partial data (just scheme name + one number) is better than nothing.
+
+Return the same JSON schema as a standard extraction:
+[
+  {{
+    "scheme_name": "<name of ESOP/ESOS/RSU scheme>",
+    "options_outstanding_beginning": <number or null>,
+    "options_granted": <number or null>,
+    "options_vested": <number or null>,
+    "options_exercised": <number or null>,
+    "options_lapsed": <number or null>,
+    "options_forfeited": <number or null>,
+    "options_outstanding_end": <number or null>,
+    "pool_approved": <number or null>,
+    "pool_balance": <number or null>,
+    "weighted_avg_exercise_price": <number or null>,
+    "weighted_avg_fair_value": <number or null>,
+    "stock_price_end_of_year": <number or null>,
+    "paid_up_capital": <SHARE COUNT as whole number or null>,
+    "dilution_pct": <decimal e.g. 0.05 for 5% or null>,
+    "vesting_period": "<text or null>",
+    "pricing_formula": "<text or null>",
+    "additional_information": "<any other ESOP facts found in text or null>",
+    "source_page": "<page or section reference>"
+  }}
+]
+
+Company: {company}
+Fiscal Year: FY{year}
+
+Text:
+{esop_text}
+
+Return ONLY valid JSON array. No markdown, no explanation."""
+
+
 KMP_EXTRACTION_PROMPT = """Extract KMP (Key Managerial Personnel) individual ESOP grant data from this Indian company annual report.
 
 Find ALL named individuals who received stock options/RSUs.
