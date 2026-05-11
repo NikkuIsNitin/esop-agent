@@ -178,7 +178,7 @@ def _call_claude_extract(prompt: str, max_tokens: int = 4096) -> str:
         max_tokens=max_tokens,
         messages=[{"role": "user", "content": prompt}],
     ))
-    return resp.content[0].text
+    return resp.content[0].text if resp.content else ""
 
 
 # ── Extraction ────────────────────────────────────────────────────────────────
@@ -276,11 +276,14 @@ def extract_all_years(company, pdf_paths, url_map) -> tuple[dict, list, dict]:
 
     # ── Propagate paid_up_capital across years within each scheme ─────────────
     for key, year_data in scheme_data.items():
-        known_pucs = {
-            yr: s["paid_up_capital"]
-            for yr, s in year_data.items()
-            if s.get("paid_up_capital") and float(s["paid_up_capital"]) > 5e6
-        }
+        known_pucs = {}
+        for yr, s in year_data.items():
+            try:
+                v = s.get("paid_up_capital")
+                if v is not None and float(v) > 5e6:
+                    known_pucs[yr] = v
+            except (TypeError, ValueError):
+                pass
         if not known_pucs:
             continue
         ref_puc = sorted(known_pucs.items())[-1][1]
@@ -641,7 +644,7 @@ Keep the total response under 200 words. Write in flowing prose, no bullet point
             max_tokens=1024,
             messages=[{"role": "user", "content": prompt}],
         ))
-        return resp.content[0].text.strip()
+        return (resp.content[0].text if resp.content else "").strip()
     except Exception as e:
         print(f"  ESOP explanation generation failed: {e}")
         if has_esop:
@@ -742,7 +745,7 @@ def _build_summary_sheet(wb, company, scheme_data, kmp_data, years, fy_labels):
         return row + 1
 
     def _write_text_block(ws, row, text, bg_even=C_GREY, bg_odd=C_WHITE):
-        paragraphs = [p.strip() for p in text.split("\n") if p.strip()]
+        paragraphs = [p.strip() for p in (text or "").split("\n") if p.strip()]
         for i, para in enumerate(paragraphs):
             ws.merge_cells(f"A{row}:D{row}")
             cell = ws.cell(row=row, column=1, value=para)

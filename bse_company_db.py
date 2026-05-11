@@ -44,7 +44,12 @@ def _load():
     if not _CSV_PATH.exists():
         print(f"  BSE CSV not found at {_CSV_PATH} — will use live BSE API for all lookups.")
         return
-    with open(_CSV_PATH, newline="", encoding="utf-8-sig") as f:
+    try:
+        f_handle = open(_CSV_PATH, newline="", encoding="utf-8-sig")
+    except OSError as e:
+        print(f"  BSE CSV could not be opened: {e} — falling back to live API.")
+        return
+    with f_handle as f:
         reader = csv.DictReader(f)
         for row in reader:
             code  = str(row.get("Security Code", "")).strip().zfill(6)
