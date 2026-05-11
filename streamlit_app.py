@@ -34,240 +34,452 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
-/* ── Base dark theme ── */
+/* ══════════════════════════════════════════════════════
+   BASE & RESET
+══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+
 html, body, [class*="css"] {
-    font-family: 'Inter', -apple-system, sans-serif;
-    background-color: #0F0F0F;
-    color: #E8E8E4;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #07080D;
+    color: #E2E0D8;
+    -webkit-font-smoothing: antialiased;
 }
 #MainMenu, footer, header { visibility: hidden; }
 
-/* ── Main content area ── */
+/* ══════════════════════════════════════════════════════
+   BACKGROUND — deep space with radial ambient glow
+══════════════════════════════════════════════════════ */
+.main {
+    background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(217,119,6,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 40% at 90% 80%, rgba(59,130,246,0.06) 0%, transparent 60%),
+        #07080D;
+}
 .main .block-container {
-    background: #0F0F0F;
-    padding-top: 1.5rem;
+    background: transparent;
+    padding-top: 1.8rem;
+    max-width: 1280px;
 }
 
-/* ── Sidebar ── */
+/* ══════════════════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════════════════ */
 section[data-testid="stSidebar"] {
-    background: #141414 !important;
-    border-right: 1px solid rgba(255,255,255,0.07);
+    background: linear-gradient(180deg, #0D0E14 0%, #0A0B10 100%) !important;
+    border-right: 1px solid rgba(255,255,255,0.05) !important;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
 }
-section[data-testid="stSidebar"] * { color: #C9C9C0 !important; }
+section[data-testid="stSidebar"] * { color: #B8B5A8 !important; }
 
 section[data-testid="stSidebar"] .stButton > button {
-    background: rgba(217,119,6,0.08);
-    border: 1px solid rgba(217,119,6,0.2);
-    color: #C9C9C0 !important;
-    border-radius: 8px;
-    font-size: 0.82rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    color: #A8A5A0 !important;
+    border-radius: 10px;
+    font-size: 0.81rem;
+    font-weight: 450;
     text-align: left;
-    transition: all 0.18s ease;
-    padding: 0.45rem 0.8rem;
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    padding: 0.5rem 0.85rem;
     width: 100%;
+    letter-spacing: 0.01em;
 }
 section[data-testid="stSidebar"] .stButton > button:hover {
-    background: rgba(217,119,6,0.18);
-    border-color: #D97706;
+    background: rgba(217,119,6,0.1);
+    border-color: rgba(217,119,6,0.4);
     color: #F5C842 !important;
+    transform: translateX(2px);
+    box-shadow: 0 0 20px rgba(217,119,6,0.08);
 }
 
-/* Sidebar metrics */
-[data-testid="stMetricValue"] {
-    color: #D97706 !important;
-    font-weight: 700 !important;
-    font-size: 1.4rem !important;
-}
-[data-testid="stMetricLabel"] { color: #7A7A70 !important; font-size: 0.72rem !important; }
+[data-testid="stMetricValue"] { color: #F59E0B !important; font-weight: 700 !important; font-size: 1.4rem !important; }
+[data-testid="stMetricLabel"] { color: #52524E !important; font-size: 0.7rem !important; }
 
-/* ── Tabs ── */
+/* ══════════════════════════════════════════════════════
+   TABS — pill style with glow on active
+══════════════════════════════════════════════════════ */
 .stTabs [data-baseweb="tab-list"] {
-    background: #1A1A1A;
-    border-radius: 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 14px;
     padding: 5px;
-    gap: 4px;
-    border: 1px solid rgba(255,255,255,0.07);
+    gap: 3px;
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
 }
 .stTabs [data-baseweb="tab"] {
-    border-radius: 7px;
-    padding: 7px 20px;
-    font-size: 0.87rem;
+    border-radius: 10px;
+    padding: 8px 22px;
+    font-size: 0.85rem;
     font-weight: 500;
-    color: #7A7A70 !important;
+    color: #5A5A52 !important;
     background: transparent !important;
     border: none !important;
-    transition: all 0.15s;
+    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
 }
+.stTabs [data-baseweb="tab"]:hover { color: #A8A5A0 !important; }
 .stTabs [aria-selected="true"] {
-    background: #2A2A2A !important;
-    color: #D97706 !important;
+    background: linear-gradient(135deg, rgba(217,119,6,0.18), rgba(217,119,6,0.08)) !important;
+    color: #F59E0B !important;
     font-weight: 600;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    border: 1px solid rgba(217,119,6,0.25) !important;
+    box-shadow: 0 2px 12px rgba(217,119,6,0.12), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
-/* ── Chat area ── */
+/* ══════════════════════════════════════════════════════
+   CHAT — premium message bubbles
+══════════════════════════════════════════════════════ */
 .stChatMessage {
-    background: #1A1A1A !important;
+    background: rgba(255,255,255,0.025) !important;
     border: 1px solid rgba(255,255,255,0.06) !important;
-    border-radius: 12px !important;
+    border-radius: 16px !important;
+    backdrop-filter: blur(12px) !important;
+    transition: border-color 0.2s !important;
 }
-[data-testid="stChatMessageContent"] { color: #E8E8E4 !important; }
+.stChatMessage:hover { border-color: rgba(255,255,255,0.1) !important; }
+[data-testid="stChatMessageContent"] { color: #DDD9D0 !important; line-height: 1.65 !important; }
+
 .stChatInputContainer > div {
-    background: #1A1A1A !important;
-    border: 1px solid rgba(217,119,6,0.35) !important;
-    border-radius: 12px !important;
-    color: #E8E8E4 !important;
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(217,119,6,0.3) !important;
+    border-radius: 14px !important;
+    backdrop-filter: blur(12px) !important;
+    box-shadow: 0 0 0 1px rgba(217,119,6,0.08), 0 8px 32px rgba(0,0,0,0.3) !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+.stChatInputContainer > div:focus-within {
+    border-color: rgba(217,119,6,0.6) !important;
+    box-shadow: 0 0 0 3px rgba(217,119,6,0.1), 0 8px 32px rgba(0,0,0,0.3) !important;
 }
 .stChatInputContainer textarea {
     background: transparent !important;
-    color: #E8E8E4 !important;
+    color: #E2E0D8 !important;
+    font-size: 0.93rem !important;
 }
 
-/* ── Selectbox / inputs ── */
+/* ══════════════════════════════════════════════════════
+   INPUTS & SELECTS
+══════════════════════════════════════════════════════ */
 [data-baseweb="select"] > div,
 [data-baseweb="input"] > div {
-    background: #1E1E1E !important;
-    border-color: rgba(255,255,255,0.1) !important;
-    color: #E8E8E4 !important;
-    border-radius: 8px !important;
+    background: rgba(255,255,255,0.04) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+    color: #E2E0D8 !important;
+    border-radius: 10px !important;
+    transition: border-color 0.2s !important;
 }
-[data-baseweb="select"] span { color: #E8E8E4 !important; }
-.stSelectbox label { color: #9A9A90 !important; font-size: 0.8rem !important; }
+[data-baseweb="select"] > div:focus-within { border-color: rgba(217,119,6,0.4) !important; }
+[data-baseweb="select"] span { color: #E2E0D8 !important; }
+[data-baseweb="menu"] { background: #13141A !important; border: 1px solid rgba(255,255,255,0.08) !important; border-radius: 12px !important; }
+[data-baseweb="option"] { background: transparent !important; color: #C8C5BE !important; }
+[data-baseweb="option"]:hover { background: rgba(217,119,6,0.1) !important; color: #F5C842 !important; }
+.stSelectbox label, .stTextInput label { color: #52524E !important; font-size: 0.75rem !important; letter-spacing: 0.04em !important; text-transform: uppercase !important; }
 
-/* ── DataFrames ── */
+/* ══════════════════════════════════════════════════════
+   DATAFRAMES
+══════════════════════════════════════════════════════ */
 [data-testid="stDataFrame"] {
-    background: #1A1A1A !important;
+    background: rgba(255,255,255,0.02) !important;
     border: 1px solid rgba(255,255,255,0.07) !important;
-    border-radius: 10px !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
 }
-.dvn-scroller { background: #1A1A1A !important; }
+.dvn-scroller { background: transparent !important; }
 
-/* ── Download button ── */
-[data-testid="stDownloadButton"] > button {
-    background: linear-gradient(135deg, #D97706, #B45309) !important;
-    color: white !important;
+/* ══════════════════════════════════════════════════════
+   BUTTONS — primary & download
+══════════════════════════════════════════════════════ */
+[data-testid="stDownloadButton"] > button,
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%) !important;
+    color: #07080D !important;
     border: none !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    font-size: 0.83rem !important;
-    transition: all 0.18s;
-}
-[data-testid="stDownloadButton"] > button:hover {
-    background: linear-gradient(135deg, #F59E0B, #D97706) !important;
-    box-shadow: 0 0 16px rgba(217,119,6,0.35);
-}
-
-/* ── Spinner ── */
-[data-testid="stSpinner"] p { color: #D97706 !important; }
-
-/* ── Alerts ── */
-[data-testid="stAlert"] {
-    background: #1A1A1A !important;
-    border: 1px solid rgba(217,119,6,0.25) !important;
     border-radius: 10px !important;
-    color: #E8E8E4 !important;
+    font-weight: 700 !important;
+    font-size: 0.84rem !important;
+    letter-spacing: 0.02em !important;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1) !important;
+    box-shadow: 0 4px 20px rgba(217,119,6,0.25) !important;
+}
+[data-testid="stDownloadButton"] > button:hover,
+.stButton > button[kind="primary"]:hover {
+    background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #D97706 100%) !important;
+    box-shadow: 0 6px 28px rgba(217,119,6,0.45) !important;
+    transform: translateY(-1px) !important;
 }
 
-/* ── Plotly charts dark bg ── */
-.js-plotly-plot { border-radius: 12px !important; }
+/* ══════════════════════════════════════════════════════
+   ALERTS / INFO
+══════════════════════════════════════════════════════ */
+[data-testid="stAlert"] {
+    background: rgba(217,119,6,0.06) !important;
+    border: 1px solid rgba(217,119,6,0.2) !important;
+    border-radius: 12px !important;
+    color: #DDD9D0 !important;
+    backdrop-filter: blur(8px) !important;
+}
 
-/* ── Custom components ── */
-.claude-header {
+/* ══════════════════════════════════════════════════════
+   SPINNER
+══════════════════════════════════════════════════════ */
+[data-testid="stSpinner"] p { color: #F59E0B !important; }
+
+/* ══════════════════════════════════════════════════════
+   CHARTS
+══════════════════════════════════════════════════════ */
+.js-plotly-plot {
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3) !important;
+}
+
+/* ══════════════════════════════════════════════════════
+   DIVIDER
+══════════════════════════════════════════════════════ */
+hr { border: none !important; border-top: 1px solid rgba(255,255,255,0.05) !important; margin: 1.2rem 0 !important; }
+
+/* ══════════════════════════════════════════════════════
+   CUSTOM COMPONENTS
+══════════════════════════════════════════════════════ */
+
+/* ── Hero header ── */
+.hero-header {
+    padding: 2rem 0 1.6rem 0;
+    margin-bottom: 1.8rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+}
+.hero-brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 1.2rem 0 1rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    margin-bottom: 1.2rem;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
 }
-.claude-header .logo-mark {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, #D97706, #92400E);
-    border-radius: 10px;
+.hero-logo {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, #F59E0B, #D97706, #92400E);
+    border-radius: 14px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     flex-shrink: 0;
-    box-shadow: 0 0 16px rgba(217,119,6,0.3);
+    box-shadow: 0 0 0 1px rgba(245,158,11,0.3), 0 8px 24px rgba(217,119,6,0.35);
 }
-.claude-header h1 {
-    margin: 0; font-size: 1.3rem; font-weight: 700;
-    color: #F0EFE9; letter-spacing: -0.3px;
+.hero-title {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 40%, #FDE68A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin: 0;
 }
-.claude-header .sub {
-    font-size: 0.78rem; color: #7A7A70; margin: 0;
+.hero-sub {
+    font-size: 0.8rem;
+    color: #52524E;
+    margin: 3px 0 0 0;
+    letter-spacing: 0.01em;
 }
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.25);
+    color: #34D399;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.hero-badge::before { content: "●"; font-size: 0.5rem; }
 
+/* ── Stat cards ── */
 .stat-card {
-    background: #1A1A1A;
+    background: rgba(255,255,255,0.025);
     border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px;
-    padding: 1rem 1.2rem;
+    border-radius: 16px;
+    padding: 1.1rem 1.3rem;
     text-align: center;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    backdrop-filter: blur(8px);
+}
+.stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(217,119,6,0.4), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
 }
 .stat-card:hover {
-    border-color: rgba(217,119,6,0.35);
-    box-shadow: 0 0 20px rgba(217,119,6,0.08);
+    border-color: rgba(217,119,6,0.3);
+    box-shadow: 0 8px 32px rgba(217,119,6,0.1), 0 0 0 1px rgba(217,119,6,0.1);
+    transform: translateY(-2px);
 }
+.stat-card:hover::before { opacity: 1; }
 .stat-card .num {
-    font-size: 2rem; font-weight: 700;
-    color: #D97706; line-height: 1;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.1rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #FBBF24, #F59E0B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
     font-variant-numeric: tabular-nums;
 }
 .stat-card .lbl {
-    font-size: 0.7rem; color: #7A7A70;
-    text-transform: uppercase; letter-spacing: 0.6px;
-    margin-top: 0.35rem;
+    font-size: 0.67rem;
+    color: #52524E;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.4rem;
+    font-weight: 500;
 }
 
-.company-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: #1E1E1E; border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px; padding: 4px 12px;
-    font-size: 0.78rem; color: #C0C0B8;
-    margin: 2px; cursor: default;
-    transition: border-color 0.15s;
+/* ── Glass card (generic) ── */
+.glass-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 1.2rem 1.4rem;
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
 }
-.company-chip.has-data { border-color: rgba(34,197,94,0.35); }
-.company-chip.no-data  { border-color: rgba(217,119,6,0.25); }
+.glass-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%);
+    pointer-events: none;
+}
 
+/* ── Section label ── */
+.section-label {
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #3A3A35;
+    margin: 1rem 0 0.5rem 0;
+}
+
+/* ── Tool activity card ── */
 .tool-card {
-    background: #1A1A1A;
-    border: 1px solid rgba(217,119,6,0.2);
-    border-left: 3px solid #D97706;
-    border-radius: 10px;
-    padding: 0.7rem 1rem;
-    margin: 0.5rem 0;
-    font-size: 0.84rem;
-    color: #C0C0B8;
+    background: rgba(217,119,6,0.05);
+    border: 1px solid rgba(217,119,6,0.15);
+    border-left: 3px solid #F59E0B;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    margin: 0.45rem 0;
+    font-size: 0.83rem;
+    color: #C0BDB5;
+    backdrop-filter: blur(8px);
 }
 .tool-card .tool-name {
-    font-weight: 600; color: #D97706;
-    font-size: 0.78rem; text-transform: uppercase;
-    letter-spacing: 0.4px; margin-bottom: 0.3rem;
+    font-weight: 600;
+    color: #F59E0B;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.25rem;
 }
 
-.section-label {
-    font-size: 0.7rem; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.8px;
-    color: #5A5A52; margin: 0.8rem 0 0.4rem 0;
-}
-
+/* ── Metric bar ── */
 .metric-bar {
     display: flex; align-items: center;
     justify-content: space-between;
-    padding: 6px 12px;
-    background: #1A1A1A;
-    border-radius: 8px; margin: 3px 0;
-    border-left: 3px solid #D97706;
+    padding: 7px 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    margin: 4px 0;
+    border-left: 2px solid rgba(245,158,11,0.5);
+    transition: background 0.2s;
 }
-.metric-bar .mname { font-size: 0.79rem; color: #9A9A90; }
-.metric-bar .mval  { font-weight: 700; color: #F59E0B; font-size: 0.95rem; }
+.metric-bar:hover { background: rgba(255,255,255,0.05); }
+.metric-bar .mname { font-size: 0.78rem; color: #7A7A72; }
+.metric-bar .mval  { font-weight: 700; color: #F59E0B; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
 
-/* ── Divider dark ── */
-hr { border-color: rgba(255,255,255,0.06) !important; }
+/* ── Company chip ── */
+.company-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 0.77rem; color: #A8A5A0;
+    margin: 2px; cursor: default;
+    transition: all 0.15s;
+}
+.company-chip:hover { border-color: rgba(217,119,6,0.3); color: #D4A843; }
+.company-chip.has-data { border-color: rgba(16,185,129,0.3); color: #6EE7B7; }
+.company-chip.no-data  { border-color: rgba(217,119,6,0.2); }
+
+/* ── Sidebar brand area ── */
+.sidebar-brand {
+    padding: 1.2rem 0.8rem 0.8rem 0.8rem;
+    background: linear-gradient(180deg, rgba(217,119,6,0.06) 0%, transparent 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    margin-bottom: 0.5rem;
+}
+.sidebar-logo-wrap {
+    display: flex; align-items: center; gap: 0.65rem;
+}
+.sidebar-logo {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #F59E0B, #D97706, #92400E);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 0 16px rgba(217,119,6,0.35);
+    flex-shrink: 0;
+}
+.sidebar-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #F0EDE5 !important;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+.sidebar-tagline {
+    font-size: 0.64rem;
+    color: #3A3A35 !important;
+    letter-spacing: 0.03em;
+    margin-top: 1px;
+}
+
+/* ── ESOP status banners ── */
+.esop-yes {
+    background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.06));
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 14px;
+    padding: 1rem 1.4rem;
+    margin-bottom: 1rem;
+}
+.esop-no {
+    background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.04));
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 14px;
+    padding: 1rem 1.4rem;
+    margin-bottom: 1rem;
+}
+
+/* ── Animations ── */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.glass-card, .stat-card { animation: fadeSlideUp 0.35s ease both; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -299,14 +511,12 @@ def render_sidebar():
     with st.sidebar:
         # Brand
         st.markdown("""
-        <div style="padding:1.1rem 0.6rem 1rem 0.6rem;">
-            <div style="display:flex;align-items:center;gap:0.6rem;">
-                <div style="width:34px;height:34px;background:linear-gradient(135deg,#D97706,#92400E);
-                            border-radius:9px;display:flex;align-items:center;justify-content:center;
-                            font-size:1rem;box-shadow:0 0 12px rgba(217,119,6,0.3);flex-shrink:0;">📊</div>
+        <div class="sidebar-brand">
+            <div class="sidebar-logo-wrap">
+                <div class="sidebar-logo">📊</div>
                 <div>
-                    <div style="font-size:1rem;font-weight:700;color:#F0EFE9;line-height:1.1;">ESOP Agent</div>
-                    <div style="font-size:0.68rem;color:#5A5A52;">4,845 BSE Companies</div>
+                    <div class="sidebar-name">ESOP Agent</div>
+                    <div class="sidebar-tagline">Powered by Qapita · 4,800+ BSE companies</div>
                 </div>
             </div>
         </div>
@@ -355,22 +565,28 @@ def render_sidebar():
 # ── App Header ────────────────────────────────────────────────────────────────
 
 def render_header(stats):
-    st.markdown("""
-    <div class="claude-header">
-        <div class="logo-mark">📊</div>
-        <div>
-            <h1>ESOP Intelligence Agent</h1>
-            <p class="sub">Real-time ESOP analytics from BSE annual report filings · Indian listed companies</p>
+    from bse_company_db import total_companies
+    st.markdown(f"""
+    <div class="hero-header">
+        <div class="hero-brand">
+            <div class="hero-logo">📊</div>
+            <div>
+                <p class="hero-title">ESOP Intelligence</p>
+                <p class="hero-sub">Real-time equity compensation analytics · BSE annual report filings</p>
+            </div>
+            <div style="margin-left:auto;">
+                <span class="hero-badge">Live</span>
+            </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     col1, col2, col3, col4 = st.columns(4)
     cards = [
-        (stats["companies"], "Companies"),
-        (stats["total"],     "Reports in DB"),
-        (stats["done"],      "Extracted"),
-        (stats["pending"],   "Pending"),
+        (f"{total_companies():,}", "BSE Companies"),
+        (stats["companies"],       "Tracked"),
+        (stats["done"],            "Reports Extracted"),
+        (stats["pending"],         "Pending"),
     ]
     for col, (num, lbl) in zip([col1, col2, col3, col4], cards):
         with col:
@@ -431,12 +647,22 @@ def render_chat_tab():
 
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
+        st.session_state["agent_running"] = True
+        st.session_state["stop_requested"] = False
         with st.chat_message("user", avatar="👤"):
             st.markdown(user_input)
 
         with st.chat_message("assistant", avatar="🤖"):
+            stop_col, _ = st.columns([1, 8])
+            with stop_col:
+                if st.button("⏹ Stop", key="stop_btn", help="Stop the agent"):
+                    st.session_state["stop_requested"] = True
+
             with st.spinner("Thinking..."):
                 responses = _run_agent(user_input)
+
+            st.session_state["agent_running"] = False
+
             for resp in responses:
                 if resp.get("content"):
                     st.markdown(resp["content"])
@@ -568,6 +794,15 @@ def _run_agent(user_input: str) -> list[dict]:
     max_loops = 8  # prevent infinite tool loops
 
     for _ in range(max_loops):
+        # Check stop button
+        if st.session_state.get("stop_requested"):
+            responses.append({
+                "role": "assistant",
+                "content": "⏹ Stopped.",
+                "type": "text",
+            })
+            break
+
         # Retry on overload/rate-limit with exponential backoff
         resp = None
         for attempt in range(4):
@@ -1344,6 +1579,10 @@ def render_instant_report_tab():
     from tools import generate_instant_report, search_bse_company
     from bse_company_db import total_companies
 
+    # Apply pending code selection before the widget renders
+    if "_pending_instant_code" in st.session_state:
+        st.session_state["instant_code_input"] = st.session_state.pop("_pending_instant_code")
+
     st.markdown("""
     <div style='background:#1A1A1A;border:1px solid rgba(217,119,6,0.25);border-left:4px solid #D97706;
                 border-radius:12px;padding:1rem 1.4rem;margin-bottom:1.4rem;'>
@@ -1396,7 +1635,7 @@ def render_instant_report_tab():
                 name = row.get("Company", "")
                 tick = row.get("Ticker", "")
                 if st.button(f"{code}  ·  {name}  ({tick})", key=f"pick_{code}"):
-                    st.session_state["instant_code_input"] = code
+                    st.session_state["_pending_instant_code"] = code
                     st.rerun()
 
     # ── Run the pipeline ──────────────────────────────────────────────────────
@@ -1427,20 +1666,18 @@ def render_instant_report_tab():
             # Status banner
             if has_esop:
                 st.markdown(
-                    f"<div style='background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);"
-                    f"border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1rem;'>"
-                    f"<span style='font-size:1.1rem;font-weight:700;color:#22C55E;'>✅ ESOP FOUND</span>"
-                    f"<span style='color:#9A9A90;font-size:0.85rem;margin-left:1rem;'>"
+                    f"<div class='esop-yes'>"
+                    f"<span style='font-size:1.05rem;font-weight:700;color:#34D399;'>✅ ESOP PLAN FOUND</span>"
+                    f"<span style='color:#6B7280;font-size:0.84rem;margin-left:1rem;'>"
                     f"{company} · {len(schemes)} scheme(s): {', '.join(schemes)}</span>"
                     f"</div>",
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    f"<div style='background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);"
-                    f"border-radius:10px;padding:0.8rem 1.2rem;margin-bottom:1rem;'>"
-                    f"<span style='font-size:1.1rem;font-weight:700;color:#EF4444;'>❌ NO ESOP PLAN FOUND</span>"
-                    f"<span style='color:#9A9A90;font-size:0.85rem;margin-left:1rem;'>"
+                    f"<div class='esop-no'>"
+                    f"<span style='font-size:1.05rem;font-weight:700;color:#F87171;'>❌ NO ESOP PLAN FOUND</span>"
+                    f"<span style='color:#6B7280;font-size:0.84rem;margin-left:1rem;'>"
                     f"{company} — no stock option data in annual reports</span>"
                     f"</div>",
                     unsafe_allow_html=True,
