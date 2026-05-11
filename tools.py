@@ -1561,12 +1561,22 @@ def generate_instant_report(inp: dict) -> dict:
     if kmp_names:
         summary_block += f"\n\n**KMP with ESOP grants ({len(kmp_names)}):** {', '.join(kmp_names[:8])}"
 
+    # Detect sparse data: scheme found but no numerical data extracted
+    sparse_data = has_esop and total_grants_all == 0 and not kmp_names
+
     steps.append(
         f"\n✅ **Report ready!**\n"
         f"- {'✅ Has ESOP' if has_esop else '❌ No ESOP plan found'}\n"
         + (f"- Schemes: {', '.join(schemes)}\n" if schemes else "")
         + f"- Years processed: FY{sorted(pdf_paths.keys())}\n"
         + f"- KMP records: {len(kmp_data)}"
+        + (
+            "\n\n⚠️ **Note:** ESOP scheme name was detected but detailed numerical data could not be "
+            "extracted. This typically means the annual reports are scanned PDFs (image-based, not "
+            "text-searchable) or the company uses a non-standard disclosure format. "
+            "The Excel file includes the raw ESOP text in the **ESOP Statements** sheet for manual review."
+            if sparse_data else ""
+        )
     )
 
     return {

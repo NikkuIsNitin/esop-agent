@@ -423,6 +423,29 @@ def _build_scheme_sheet(wb, company, scheme_name, year_data, years, fy_labels):
         ws.row_dimensions[row_i].height = 16
         row_i += 1
 
+    # ── Data quality notice if all numeric cells are empty ────────────────────
+    numeric_keys = [
+        "options_granted", "options_vested", "options_exercised",
+        "options_outstanding_end", "pool_approved",
+    ]
+    has_any_data = any(
+        (year_data.get(yr) or {}).get(k) is not None
+        for yr in years for k in numeric_keys
+    )
+    if not has_any_data:
+        ws.merge_cells(f"A{row_i}:{last_col}{row_i}")
+        notice = ws.cell(row=row_i, column=1,
+            value=(
+                "ℹ️  ESOP scheme name was found in the annual report, but detailed numerical data "
+                "could not be extracted. The report may use scanned/image-based PDFs, or disclose "
+                "ESOP figures in a non-standard format. Check the ESOP Statements sheet for raw text."
+            ))
+        notice.font      = _font(italic=True, color="7F7F7F", size=9)
+        notice.fill      = _fill("FFF9E6")
+        notice.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
+        ws.row_dimensions[row_i].height = 48
+        row_i += 1
+
     # ── Column widths ─────────────────────────────────────────────────────────
     ws.column_dimensions["A"].width = 46
     for i in range(2, 2 + n_years):
