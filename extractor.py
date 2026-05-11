@@ -87,7 +87,7 @@ def _parse_json(raw: str, label: str) -> list:
 
 def _normalize_scheme_name(name: str) -> str:
     import re
-    n = name.lower().strip()
+    n = (name or "Unknown").lower().strip()
     year_m = re.search(r"\b(19|20)\d{2}\b", n)
     year   = year_m.group() if year_m else ""
 
@@ -267,7 +267,7 @@ def extract_all_years(company, pdf_paths, url_map) -> tuple[dict, list, dict]:
 
         schemes = extract_scheme_data(company, year, pdf_path, url_info)
         for s in schemes:
-            key = _normalize_scheme_name(s.get("scheme_name", "Unknown"))
+            key = _normalize_scheme_name(s.get("scheme_name") or "Unknown")
             if key not in scheme_data: scheme_data[key] = {}
             scheme_data[key][year] = s
 
@@ -858,6 +858,8 @@ def _join_pdf_lines(raw_text: str) -> list[str]:
 
 def _is_esop_block(text: str) -> bool:
     """Return True if the text block contains at least one real ESOP signal."""
+    if not text:
+        return False
     t = text.lower()
     return any(sig in t for sig in _ESOP_CONFIRM_SIGNALS)
 
